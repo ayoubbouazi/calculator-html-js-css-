@@ -15,8 +15,12 @@ const subBtn = document.getElementById("sub");
 const mulBtn = document.getElementById("mul");
 const divBtn = document.getElementById("div");
 const equal = document.getElementById("equal");
-const clear = document.getElementById('clear');
+const dot = document.getElementById("dot");
+const modul = document.getElementById("mod");
+const pow = document.getElementById("pow");
+const clear = document.getElementById("clear");
 const display = document.getElementById("display");
+const del = document.getElementById("del");
 
 // Event Listeners
 one.addEventListener("click", () => (display.value += 1));
@@ -33,41 +37,143 @@ addBtn.addEventListener("click", () => (display.value += "+"));
 subBtn.addEventListener("click", () => (display.value += "-"));
 mulBtn.addEventListener("click", () => (display.value += "*"));
 divBtn.addEventListener("click", () => (display.value += "/"));
-clear.addEventListener('click', () => display.value = '');
+dot.addEventListener("click", () => (display.value += "."));
+modul.addEventListener("click", () => (display.value += "%"));
+clear.addEventListener("click", () => (display.value = ""));
+pow.addEventListener("click", () => (display.value += "**"));
+del.addEventListener(
+  "click",
+  () => (display.value = display.value.slice(0, -1))
+);
 
-// equal.addEventListener('click', () => {
-//     let expression = display.textContent;
-//     let numbers = expression.split(/\+|\-|\*|\//g);
-//     let operators = expression.replace(/[0-9]|\./g, "").split("");
-//     let divide = operators.indexOf("/");
-//     let multiply = operators.indexOf("*");
-//     let subtract = operators.indexOf("-");
-//     let add = operators.indexOf("+");
-//     while (divide != -1) {
-//         numbers.splice(divide, 2, div(Number(numbers[divide]), Number(numbers[divide + 1])));
-//         operators.splice(divide, 1);
-//         divide = operators.indexOf("/");
-//     }
-//     while (multiply != -1) {
-//         numbers.splice(multiply, 2, mul(Number(numbers[multiply]), Number(numbers[multiply + 1])));
-//         operators.splice(multiply, 1);
-//         multiply = operators.indexOf("*");
-//     }
-//     while (subtract != -1) {
-//         numbers.splice(subtract, 2, sub(Number(numbers[subtract]), Number(numbers[subtract + 1])));
-//         operators.splice(subtract, 1);
-//         subtract = operators.indexOf("-");
-//     }
-//     while (add != -1) {
-//         numbers.splice(add, 2, add(Number(numbers[add]), Number(numbers[add + 1])));
-//         operators.splice(add, 1);
-//         add = operators.indexOf("+");
-//     }
-//     display.textContent = numbers[0];
-// });
+equal.addEventListener("click", () => {
+// ! this is the easy way to calculate
+  //   let result = eval(display.value);
+    //   display.value = result;
+        
+// ! this is the hard way to calculate
+  let result = display.value.split("");
+  let arr = [];
+  let num = "";
+  for (let i = 0; i < result.length; i++) {
+    if (
+      result[i] === "+" ||
+      result[i] === "-" ||
+      result[i] === "*" ||
+      result[i] === "/" ||
+      result[i] === "%" ||
+      result[i] === "**"
+    ) {
+      arr.push(num);
+      arr.push(result[i]);
+      num = "";
+    } else {
+      num += result[i];
+    }
+  }
+  arr.push(num);
+  console.log(arr);
 
-// Declare 'add' with the desired implementation
-const add = (a, b) => a + b;
-const sub = (a, b) => a - b;
-const mul = (a, b) => a * b;
-const div = (a, b) => (a / b ? b != 0 : "Error: Division by zero");
+  // what if i want to calculate more than 2 numbers
+  let a = Number(arr[0]);
+  let b = Number(arr[2]);
+  let c = Number(arr[4]);
+  let op1 = arr[1];
+  let op2 = arr[3];
+  let res = 0;
+  switch (op1) {
+    case "+":
+      res = add([a, b]);
+      break;
+    case "-":
+      res = sub([a, b]);
+      break;
+    case "*":
+      res = mul([a, b]);
+      break;
+    case "/":
+      res = div([a, b]);
+      break;
+    case "%":
+      res = mod([a, b]);
+      break;
+    case "**":
+      res = power([a, b]);
+      break;
+    default:
+      res = "Error";
+  }
+  switch (op2) {
+    case "+":
+      res = add([res, c]);
+      break;
+    case "-":
+      res = sub([res, c]);
+      break;
+    case "*":
+      res = mul([res, c]);
+      break;
+    case "/":
+      res = div([res, c]);
+      break;
+    case "%":
+      res = mod([res, c]);
+      break;
+    case "**":
+      res = power([res, c]);
+      break;
+    default:
+      res = "Error";
+  }
+  display.value = res;
+});
+
+// Functions
+
+const add = (arr) => {
+  let sum = 0;
+  for (let i = 0; i < arr.length; i++) {
+    sum += arr[i];
+  }
+  return sum;
+};
+
+const sub = (arr) => {
+  let sub = arr[0];
+  for (let i = 1; i < arr.length; i++) {
+    sub -= arr[i];
+  }
+  return sub;
+};
+
+const mul = (arr) => {
+  let mul = 1;
+  for (let i = 0; i < arr.length; i++) {
+    mul *= arr[i];
+  }
+  return mul;
+};
+
+const div = (arr) => {
+  let div = arr[0];
+  for (let i = 1; i < arr.length; i++) {
+    div /= arr[i];
+  }
+  return div;
+};
+
+const mod = (arr) => {
+  let mod = arr[0];
+  for (let i = 1; i < arr.length; i++) {
+    mod %= arr[i];
+  }
+  return mod;
+};
+
+const power = (arr) => {
+  let power = arr[0];
+  for (let i = 1; i < arr.length; i++) {
+    power **= arr[i];
+  }
+  return power;
+};
